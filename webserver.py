@@ -48,7 +48,7 @@ async def my_page(command):
             result.set_text(f"Exact Match!")
             
             for i,(t,p) in enumerate(zip(url, purpose)):
-                resulttable.add_rows({"url": t, "purpose":p})
+                resulttable.add_rows([{"url": t, "purpose":p}])
             result2.set_text("")
             commitbutton.visible = True
 
