@@ -1,5 +1,5 @@
 from nicegui import ui
-from functions import *
+from functions import parse_xml, get_url, get_purpose
 import traceback
 import sys
 
