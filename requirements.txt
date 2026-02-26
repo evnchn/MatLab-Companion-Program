@@ -1,2 +1,4 @@
 nicegui<=4.0
 lxml<=6.0
+requests
+pytest<=10.0
