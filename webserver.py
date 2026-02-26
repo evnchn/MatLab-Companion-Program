@@ -121,5 +121,5 @@ async def my_page(command):
 async def my_page2():
     await my_page('')
 
-if __name__ == '__main__':
+if __name__ in {'__main__', '__mp_main__'}:
     ui.run()
