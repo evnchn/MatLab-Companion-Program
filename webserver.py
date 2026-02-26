@@ -1,30 +1,30 @@
+
 from nicegui import ui
-from functions import parse_xml, get_url, get_purpose
-import traceback
-import sys
+
+from functions import get_purpose, get_url, parse_xml
 
 # need pip install brotlicffi
 
 tree = None
 root = None
-url = "https://www.mathworks.com/help/matlab/referencelist_function_cat.xml"
-filename = "referencelist_function_cat.xml"
+url = 'https://www.mathworks.com/help/matlab/referencelist_function_cat.xml'
+filename = 'referencelist_function_cat.xml'
 # download_xml(url, filename)
 tree, root = parse_xml(filename)
 # print(root)
 
-mw = "https://www.mathworks.com/help/ref/data"
-namespace = {"mw": mw}
+mw = 'https://www.mathworks.com/help/ref/data'
+namespace = {'mw': mw}
 
 dict_purpose = {}
 
 dict_url = {}
 
 # Explore the XML file
-for elem in root.findall(".//mw:ref", namespace):
-    ean = elem.attrib["name"]
-    dict_url[ean] = dict_url.get(ean, []) + [get_url(elem)]
-    dict_purpose[ean] = dict_purpose.get(ean, []) + [get_purpose(elem)]
+for elem in root.findall('.//mw:ref', namespace):
+    ean = elem.attrib['name']
+    dict_url[ean] = [*dict_url.get(ean, []), get_url(elem)]
+    dict_purpose[ean] = [*dict_purpose.get(ean, []), get_purpose(elem)]
     # print(elem.attrib["name"].upper(), get_all_title(elem), get_purpose(elem))
     # break
 
@@ -35,37 +35,37 @@ for elem in root.findall(".//mw:ref", namespace):
 @ui.page('/{command}')
 async def my_page(command):
 
-    ui.page_title('MatLab Companion Program') 
-    ui.label('MatLab Companion Program').classes("text-2xl")
+    ui.page_title('MatLab Companion Program')
+    ui.label('MatLab Companion Program').classes('text-2xl')
     def handle_input(ev):
-        
+
         resulttable.update_rows([])
         try:
             # exact match
             url = dict_url[ev]
             purpose = dict_purpose[ev]
 
-            result.set_text(f"Exact Match!")
-            
-            for i,(t,p) in enumerate(zip(url, purpose)):
-                resulttable.add_rows([{"url": t, "purpose":p}])
-            result2.set_text("")
+            result.set_text('Exact Match!')
+
+            for _i, (t, p) in enumerate(zip(url, purpose, strict=False)):
+                resulttable.add_rows([{'url': t, 'purpose':p}])
+            result2.set_text('')
             commitbutton.visible = True
 
         except KeyError:
             commitbutton.visible = False
-            result.set_text(f"No Exact Match...")
+            result.set_text('No Exact Match...')
 
-            
 
-        if len(ev) >= 2:
-                
+
+        if len(ev) >= 2:  # noqa: PLR2004
+
             keys_partial = [key for key in dict_url if ev.lower() in key.lower()]
             keys_partial.sort()
             # result.set_text(f"Partial Exact Match!")
             # result2.set_text("Partial matches: "+" | ".join(keys_partial))
-            table.update_rows([{"command":kp}  for kp in keys_partial ])
-            
+            table.update_rows([{'command':kp}  for kp in keys_partial ])
+
         else:
             # result2.set_text("Partial matches: Type more to show...")
             table.update_rows([])
@@ -73,11 +73,12 @@ async def my_page(command):
 
 
     def clicked_button():
-        ui.notify('You clicked me!'); ui.open(myinput.value, new_tab=False)
+        ui.notify('You clicked me!')
+        ui.open(myinput.value, new_tab=False)
 
     myinput = ui.input(label='Text', placeholder='start typing', value=command,autocomplete=[key for key in dict_url],
             on_change=lambda e: handle_input(e.value),
-            validation={'Input too long': lambda value: len(value) < 20})
+            validation={'Input too long': lambda value: len(value) < 20})  # noqa: PLR2004
     result = ui.label()
     commitbutton = ui.button('Click to get shareable URL!', on_click=clicked_button)
     result2 = ui.label()
@@ -88,7 +89,7 @@ async def my_page(command):
     ]
     rows = [
     ]
-    resulttable = ui.table(columns=columns, rows=rows, row_key = "url")
+    resulttable = ui.table(columns=columns, rows=rows, row_key = 'url')
     resulttable.add_slot('body-cell-url', '''
         <q-td :props="props">
             <a :href="'https://www.mathworks.com/help/matlab/' + props.value" target="_blank">{{ props.value }}</a>
@@ -118,8 +119,7 @@ async def my_page(command):
 
 @ui.page('/')
 async def my_page2():
-    await my_page("")
+    await my_page('')
 
 if __name__ == '__main__':
     ui.run()
-
