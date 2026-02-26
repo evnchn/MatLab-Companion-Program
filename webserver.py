@@ -23,8 +23,8 @@ dict_url = {}
 # Explore the XML file
 for elem in root.findall('.//mw:ref', namespace):
     ean = elem.attrib['name']
-    dict_url[ean] = dict_url.get(ean, []) + [get_url(elem)]
-    dict_purpose[ean] = dict_purpose.get(ean, []) + [get_purpose(elem)]
+    dict_url[ean] = [*dict_url.get(ean, []), get_url(elem)]
+    dict_purpose[ean] = [*dict_purpose.get(ean, []), get_purpose(elem)]
     # print(elem.attrib["name"].upper(), get_all_title(elem), get_purpose(elem))
     # break
 
@@ -47,7 +47,7 @@ async def my_page(command):
 
             result.set_text('Exact Match!')
 
-            for i,(t,p) in enumerate(zip(url, purpose)):
+            for _i, (t, p) in enumerate(zip(url, purpose, strict=False)):
                 resulttable.add_rows([{'url': t, 'purpose':p}])
             result2.set_text('')
             commitbutton.visible = True
@@ -58,7 +58,7 @@ async def my_page(command):
 
 
 
-        if len(ev) >= 2:
+        if len(ev) >= 2:  # noqa: PLR2004
 
             keys_partial = [key for key in dict_url if ev.lower() in key.lower()]
             keys_partial.sort()
@@ -73,11 +73,12 @@ async def my_page(command):
 
 
     def clicked_button():
-        ui.notify('You clicked me!'); ui.open(myinput.value, new_tab=False)
+        ui.notify('You clicked me!')
+        ui.open(myinput.value, new_tab=False)
 
     myinput = ui.input(label='Text', placeholder='start typing', value=command,autocomplete=[key for key in dict_url],
             on_change=lambda e: handle_input(e.value),
-            validation={'Input too long': lambda value: len(value) < 20})
+            validation={'Input too long': lambda value: len(value) < 20})  # noqa: PLR2004
     result = ui.label()
     commitbutton = ui.button('Click to get shareable URL!', on_click=clicked_button)
     result2 = ui.label()
