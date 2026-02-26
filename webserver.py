@@ -52,10 +52,9 @@ async def my_page(command):
             result2.set_text("")
             commitbutton.visible = True
 
-        except:
+        except KeyError:
             commitbutton.visible = False
             result.set_text(f"No Exact Match...")
-            pass
 
             
 
