@@ -16,8 +16,6 @@ def download_xml(url, filename):
 
 def parse_xml(filename):
     # Parse the downloaded XML file
-    global root
-    global tree
     tree = ET.parse(filename)
     root = tree.getroot()
     return tree, root
