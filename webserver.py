@@ -89,11 +89,11 @@ async def my_page(command):
     rows = [
     ]
     resulttable = ui.table(columns=columns, rows=rows, row_key = 'url')
-    resulttable.add_slot('body-cell-url', """
+    resulttable.add_slot('body-cell-url', '''
         <q-td :props="props">
             <a :href="'https://www.mathworks.com/help/matlab/' + props.value" target="_blank">{{ props.value }}</a>
         </q-td>
-    """)
+    ''')
 
 
 
@@ -106,13 +106,13 @@ async def my_page(command):
     rows = [
     ]
     table = ui.table(columns=columns, rows=rows, row_key='command').props('grid')
-    table.add_slot('item', r"""
+    table.add_slot('item', r'''
         <q-card flat bordered :props="props" class="m-1">
             <q-card-section class="text-center">
                 <a :href="'\/'+props.row.command">{{ props.row.command }}</a>
             </q-card-section>
         </q-card>
-    """)
+    ''')
 
     handle_input(command)
 
