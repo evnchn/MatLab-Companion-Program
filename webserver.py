@@ -105,7 +105,7 @@ async def my_page(command):
     ]
     rows = [
     ]
-    table = ui.table(columns=columns, rows=rows, row_key='name').props('grid')
+    table = ui.table(columns=columns, rows=rows, row_key='command').props('grid')
     table.add_slot('item', r'''
         <q-card flat bordered :props="props" class="m-1">
             <q-card-section class="text-center">
